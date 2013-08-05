@@ -14,32 +14,25 @@ angular.module('pedalsApp')
     link: function postLink(scope, element, attrs, pedal) {
       var key = scope.control;
 
-      // Can't use angular data bindings for CSS, so flesh out
-      // simulated two-way bindings.
-      //
-      function updateValue(event, drag) {
-        var delta = drag.deltaY;
-        var newValue = pedal.getControl(key) + delta / 1000; // FIXME: This is terrible
-        newValue = Math.max(0, Math.min(1, newValue)); // clamp 0 -> 1
-        pedal.setControl(key, newValue);
-      }
-      element.on('drag', function(e, d) {
-        scope.$apply(function() {
-          updateValue(e, d);
-        });
-      });
-
-      var _previousValue = undefined;
-      scope.$watch(function $renderKnob() {
+      scope.rotation = function() {
         var value = pedal.getControl(key);
-        if (_previousValue !== value) {
-          var deg = -100 + value * 300;
+        var deg = -100 + value * 300; // [0.0, 1.0] -> [-100deg, 200deg]
+        var attr = 'rotate(' + deg + 'deg)';
+        var css = {
+          mozTransform: attr,
+          webkitTransform: attr,
+          transform: attr
+        };
+        return css;
+      };
 
-          // FIXME: webkit only!
-          element.find('.pedal-knob-indicator')
-            .css('webkitTransform', 'rotate(' + deg + 'deg)');
-          _previousValue = value;
-        }
+      element.on('drag', function(event, drag) {
+        scope.$apply(function $updateControlValue() {
+          var delta = drag.deltaY;
+          var newValue = pedal.getControl(key) + delta / 1000; // FIXME: This is terrible
+          newValue = Math.max(0, Math.min(1, newValue)); // clamp 0 -> 1
+          pedal.setControl(key, newValue);
+        });
       });
 
       element.addClass('pedal-knob-' + key);
