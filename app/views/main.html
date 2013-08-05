@@ -1,0 +1,5 @@
+<button ng-click="addPedal()">Add</button>
+<button ng-click="removePedal()">Remove</button>
+<div ng-repeat="pedal in pedals">
+  <pedal data-color="pedal.color" data-name="pedal.name" data-controls="pedal.controls"></pedal>
+</div>

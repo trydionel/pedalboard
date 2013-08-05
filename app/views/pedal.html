@@ -1,0 +1,9 @@
+<div class="pedal">
+  <div class="pedal-silkscreen"></div>
+  <div class="pedal-output">OUTPUT</div>
+  <div class="pedal-input">INPUT</div>
+  <knob data-control="name" data-label="{{ name | uppercase }}" ng-repeat="name in controls"></knob>
+  <div class="pedal-status" ng-class="{on: active}"></div>
+  <h1 class="pedal-name">{{ name }}</h1>
+  <div class="pedal-footswitch" ng-click="active = !active"></div>
+</div>

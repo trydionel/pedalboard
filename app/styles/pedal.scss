@@ -1,0 +1,192 @@
+@import "compass";
+@import "compass/utilities/general/clearfix";
+@import "compass/css3/user-interface";
+
+$pedal-width: 300px;
+$pedal-height: 500px;
+$pedal-body-color: #aa3333;
+$pedal-font-color: white;
+
+.pedal {
+  @include user-select(none);
+
+  float: right;
+  margin: 20px;
+  position: relative;
+  width: $pedal-width;
+  height: $pedal-height;
+  background-color: $pedal-body-color;
+  box-shadow: inset 0 -5px 20px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+
+  &.blue { background-color: #3333aa; }
+  &.yellow { background-color: gold; }
+  &.orange { background-color: darkorange; }
+}
+
+.pedal-silkscreen {
+  background-color: rgba(black, 0.3);
+  height: 0.65 * $pedal-height;
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  top: 10px;
+  border-radius: 10px;
+  border: 2px solid rgba(white, 0.9);
+}
+
+%pedal-knob {
+  $color: #ccc;
+  $size: 80px;
+
+  .pedal-knob-handle {
+    &:before {
+      @include background(radial-gradient(#eee, silver, #777));
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      display: block;
+      content: ' ';
+      color: black;
+      width: $size;
+      height: $size;
+      border-radius: $size;
+      background-color: $color;
+      border: 1px solid rgba(black, 0.4);
+      box-shadow: inset 0 8px 15px white;
+    }
+  }
+
+  .pedal-knob-indicator {
+    &:before { content: '\2022'; }
+    @include transform(rotate(30deg));
+    display: block;
+    font-size: 40px;
+    text-shadow: 0 0 1px white;
+    color: black;
+    width: $size - 20px;
+    height: $size - 20px;
+    margin: 10px;
+  }
+
+  .pedal-knob-label {
+    color: $pedal-font-color;
+    text-align: center;
+    margin-top: 15px;
+  }
+
+  width: $size;
+  position: absolute;
+  top: 30px;
+}
+
+.pedal-knob-gain {
+  @extend %pedal-knob;
+  left: 30px;
+}
+
+.pedal-knob-tone {
+  @extend %pedal-knob;
+  right: 30px;
+}
+
+.pedal-status {
+  $size: 30px;
+
+  @include background(linear-gradient(gray, #eee, gray));
+  position: absolute;
+  left: 50%;
+  margin-left: -0.5 * $size;
+  top: 40%;
+  background-color: silver;
+  width: $size;
+  height: $size;
+  border-radius: $size;
+
+  &:after {
+    $led-size: $size - 8px;
+    display: block;
+    content: ' ';
+    margin: ($size - $led-size) / 2 - 1;
+    width: $led-size;
+    height: $led-size;
+    border-radius: $led-size;
+    background-color: black;
+    border: 1px solid rgba(black, 0.3);
+  }
+
+  &.on:after {
+    background-color: orange;
+    box-shadow: 0 0 50px orange;
+  }
+}
+
+.pedal-name {
+  color: $pedal-font-color;
+  position: absolute;
+  top: 50%;
+  width: 100%;
+  text-align: center;
+  font-size: 4em;
+}
+
+@mixin pedal-io($side) {
+  $width: 8px;
+
+  position: absolute;
+  top: 35%;
+
+  &:after {
+    display: block;
+    content: ' ';
+    @include background(linear-gradient(gray, #eee, gray));
+    @if $side == right {
+      @include border-right-radius(4px);
+      text-align: left;
+    } @else {
+      @include border-left-radius(4px);
+      text-align: right;
+    }
+    position: absolute;
+    top: -10px;
+    #{$side}: 0;
+    width: $width;
+    height: 50px;
+    z-index: -10;
+  }
+
+  #{$side}: -$width;
+  color: $pedal-font-color;
+  font-size: 1.5em;
+  padding: 0 25px;
+}
+
+.pedal-input  { @include pedal-io(right); }
+.pedal-output { @include pedal-io(left); }
+
+.pedal-footswitch {
+  $size: 60px;
+
+  @include background(linear-gradient(gray, #eee, gray));
+  position: absolute;
+  left: 50%;
+  margin-left: -0.5 * $size;
+  bottom: 40px;
+  background-color: silver;
+  width: $size;
+  height: $size;
+  border-radius: $size;
+
+  &:after {
+    $led-size: $size - 20px;
+    display: block;
+    content: ' ';
+    margin: ($size - $led-size) / 2 - 2;
+    width: $led-size;
+    height: $led-size;
+    border-radius: $led-size;
+    background-color: silver;
+    border: 2px solid rgba(black, 0.4);
+  }
+}
